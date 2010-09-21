@@ -1,13 +1,20 @@
 package org.robotlegs.examples.signalcommands.signals
 {
-	import org.osflash.signals.Signal;
+	import org.osflash.signals.FreeSignalBase;
 	import org.robotlegs.examples.signalcommands.model.vo.FoodOrder;
-	
-	public class FoodOrderUpdated extends Signal
+
+	public class FoodOrderUpdated extends FreeSignalBase
 	{
-		public function FoodOrderUpdated()
+		private var _foodOrder:FoodOrder;
+		public function get foodOrder():FoodOrder
 		{
-			super(FoodOrder);
+			return _foodOrder;
+		}
+
+		public function dispatch(foodOrder:FoodOrder):void
+		{
+			_foodOrder = foodOrder;
+			doDispatch();
 		}
 	}
 }

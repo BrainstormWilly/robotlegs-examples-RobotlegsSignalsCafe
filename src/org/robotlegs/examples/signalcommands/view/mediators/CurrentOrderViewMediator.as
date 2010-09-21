@@ -1,57 +1,56 @@
 package org.robotlegs.examples.signalcommands.view.mediators
 {
-	import org.robotlegs.examples.signalcommands.model.vo.FoodItem;
-	import org.robotlegs.examples.signalcommands.model.vo.FoodOrder;
 	import org.robotlegs.examples.signalcommands.signals.FoodItemAddedToOrder;
 	import org.robotlegs.examples.signalcommands.signals.FoodItemSelected;
+	import org.robotlegs.examples.signalcommands.signals.FoodItemSignal;
 	import org.robotlegs.examples.signalcommands.signals.FoodOrderUpdated;
 	import org.robotlegs.examples.signalcommands.signals.NoFoodItemSelected;
 	import org.robotlegs.examples.signalcommands.view.components.CurrentOrderView;
 	import org.robotlegs.mvcs.Mediator;
-	
+
 	public class CurrentOrderViewMediator extends Mediator
 	{
 		[Inject]
 		public var view:CurrentOrderView;
-		
+
 		[Inject]
 		public var orderUpdated:FoodOrderUpdated;
-		
+
 		[Inject]
 		public var foodItemSelected:FoodItemSelected;
-		
+
 		[Inject]
 		public var noFoodItemSelected:NoFoodItemSelected;
-		
+
 		[Inject]
 		public var foodItemAddedToOrder:FoodItemAddedToOrder;
-		
+
 		override public function onRegister():void
 		{
 			orderUpdated.add(updateOnOrderUpdated);
 			foodItemAddedToOrder.add(updateOnItemAdded);
-			view.foodItemSelected.add(updateOnItemSelected);	
+			view.foodItemSelected.add(updateOnItemSelected);
 
 		}
-		
-		protected function updateOnItemAdded(item:FoodItem):void
+
+		protected function updateOnItemAdded(signal:FoodItemAddedToOrder):void
 		{
-			view.items.selectedItem = item;
-			foodItemSelected.dispatch(item);
+			view.items.selectedItem = signal.foodItem;
+			foodItemSelected.dispatch(signal.foodItem);
 		}
-		
-		protected function updateOnItemSelected(item:FoodItem):void
+
+		protected function updateOnItemSelected(signal:FoodItemSignal):void
 		{
-			if(item)
-				foodItemSelected.dispatch(item);
+			if(signal.foodItem)
+				foodItemSelected.dispatch(signal.foodItem);
 			else
 				noFoodItemSelected.dispatch();
 		}
-		
-		protected function updateOnOrderUpdated(order:FoodOrder):void
+
+		protected function updateOnOrderUpdated(signal:FoodOrderUpdated):void
 		{
 			if(!view.dataProvider)
-				view.dataProvider = order.foodItems;
+				view.dataProvider = signal.foodOrder.foodItems;
 		}
 	}
 }
