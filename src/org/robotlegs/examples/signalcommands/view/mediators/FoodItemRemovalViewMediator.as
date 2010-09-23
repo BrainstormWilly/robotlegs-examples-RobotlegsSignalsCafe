@@ -30,7 +30,7 @@ package org.robotlegs.examples.signalcommands.view.mediators
 
 		protected function updateOnItemSelected(signal:FoodItemSelected):void
 		{
-			view.enabled = signal.foodItem;
+			view.enabled = signal.foodItem != null;
 		}
 
 		protected function updateOnNoItemSelected():void
